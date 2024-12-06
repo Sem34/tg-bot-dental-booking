@@ -58,16 +58,21 @@ bot.on('contact', (msg) => {
 📝 Ім’я: ${userName}
 
 📅 Для завершення процесу та запису на зустріч перейдіть за посиланням:
-🔗 ${calendlyUrl}
 `, {
     reply_markup: {
-      keyboard: [['🆕 Нове бронювання']],
-      resize_keyboard: true,
+      inline_keyboard: [
+        [
+          {
+            text: 'Записатися на прийом',
+            url: calendlyUrl, // Это будет кнопка с ссылкой на Calendly
+          },
+        ],
+      ],
     },
   });
 });
 
-// Обробка кнопки "Нове бронювання"
+// Обработка "Нове бронювання" также будет использовать ссылку с кнопкой
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
 
@@ -89,42 +94,17 @@ bot.on('message', (msg) => {
 📝 Ім’я: ${userName}
 
 📅 Для завершення процесу та запису на зустріч перейдіть за посиланням:
-🔗 ${calendlyUrl}
 `, {
       reply_markup: {
-        keyboard: [['🆕 Нове бронювання']],
-        resize_keyboard: true,
+        inline_keyboard: [
+          [
+            {
+              text: 'Записатися на прийом',
+              url: calendlyUrl, // Кнопка с ссылкой на Calendly
+            },
+          ],
+        ],
       },
     });
   }
-});
-
-// Обробка команди /new_booking
-bot.onText(/\/new_booking/, (msg) => {
-  const chatId = msg.chat.id;
-
-  const userData = userContacts[chatId];
-
-  if (!userData) {
-    return bot.sendMessage(chatId, `❌ Ви ще не поділилися своїми контактними даними. Натисніть "📞 Поділитися номером" для продовження.`);
-  }
-
-  const { userName, phoneNumber } = userData;
-
-  const calendlyUrl = `https://calendly.com/infodentalhouse-proton/zapys-do-stomatologa?name=${encodeURIComponent(userName)}&phone=${encodeURIComponent(phoneNumber)}`;
-
-  bot.sendMessage(chatId, `
-✅ Ваші дані отримано!
-
-📲 Телефон: ${phoneNumber}  
-📝 Ім’я: ${userName}
-
-📅 Для завершення процесу та запису на зустріч перейдіть за посиланням:
-🔗 ${calendlyUrl}
-`, {
-    reply_markup: {
-      keyboard: [['🆕 Нове бронювання']],
-      resize_keyboard: true,
-    },
-  });
 });
